@@ -1,0 +1,48 @@
+kubectl create namespace hipster-shop
+kubectl -n hipster-shop create rolebinding default-view --clusterrole=view --serviceaccount=hipster-shop:default
+
+istioctl install --set profile=demo -y
+
+
+####### ISTIO APP Hipster-shop
+kubectl label namespace hipster-shop istio-injection=enabled
+kubectl edit svc istio-ingressgateway -n istio-system
+Add the following ports :
+- name: web
+  nodePort: 31770
+  port: 8080
+  protocol: TCP
+  targetPort: 8182
+  
+Expose the HipsterShop out of the cluster
+kubectl apply -f istio/hipstershop_gateway.yaml
+
+
+#### Deploy Prometheus
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack 
+
+###### ISTIO expose grafana
+kubectl edit svc istio-ingressgateway -n istio-system
+
+Add the following ports :
+- name: grafana
+  nodePort: 31775
+  port: 8888
+  protocol: TCP
+  targetPort: 8888
+  
+###### ISTIO exposePrometheus server
+kubectl edit svc istio-ingressgateway -n istio-system
+
+Add the following ports :
+- name: prometheus
+  nodePort: 31776
+  port: 9090
+  protocol: TCP
+  targetPort: 9090
+  
+
+Deploy the gateway and Virtual Services :
+kubectl apply -f istio/Prometheus_Grafana_gateway.yaml

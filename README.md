@@ -1,9 +1,5 @@
-# Is it Observable 
-<p align="center"><img src="/image/logo.png" width="40%" alt="Is It observable Logo" /></p>
-
-## Episode 13: FluentD 
+## FluentD 
 <p align="center"><img src="/image/Fluentd.png" width="40%" alt="fluentd Logo" /></p>
-This repository contains the files utilized during the tuorial delivered during the episode 13 of Is it Observable?
 
 What you will learn
 * How to build a customize fluentd container with the dynatrace plugin
